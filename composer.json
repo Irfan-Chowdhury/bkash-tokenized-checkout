@@ -1,0 +1,19 @@
+{
+    "name": "irfan-chowdhury/bkash-tokenized-checkout",
+    "description": "This is bkash tokenized checkout with laravel",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "IrfanChowdhury\\BkashTokenizedCheckout\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Irfan Chowdhury",
+            "email": "irfanchowdhury80@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
