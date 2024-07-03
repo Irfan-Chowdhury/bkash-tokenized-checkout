@@ -23,5 +23,8 @@ class BkashServiceProvider extends ServiceProvider
         Route::middleware('web')->group(function () {
             $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
         });
+
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'bkash');
+
     }
 }
