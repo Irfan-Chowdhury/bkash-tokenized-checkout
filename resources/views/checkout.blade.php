@@ -5,42 +5,41 @@
 
 <h1 class="text-center">Checkout</h1>
 
-@include('bkash::session-message')
+
 
 
 <div class="container">
+
+
+    @include('bkash::session-message')
+
+
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <div class="container-fluid" id="errorMessage"></div>
-
-
-                    {{-- <div class="mt-4 d-grid gap-2 mx-auto">
-                        <img src="{{ asset('images/payment_logo/bkash.png') }}" height="300px" width="100%">
-                    </div> --}}
-
-                    {{-- <form action="{{route('payment.pay.confirm','bkash')}}" method="post"> --}}
-                    <form action="#" method="post">
+                    <div class="mt-4 d-grid gap-2 mx-auto">
+                        <img src="https://freepnglogo.com/images/all_img/1701670291bKash-App-Logo-PNG.png" height="200px" width="400px" style="margin-left: 40px">
+                    </div>
+                    <form action="{{route('payment.process')}}" method="post">
                         @csrf
-                        <input type="hidden" name="totalAmount" value="10">
 
-                        <div class="mt-4 d-grid gap-2 mx-auto">
-                            <button type="submit" id="payNowBtn" class="btn btn-outline-success">
-                                Pay Now
-                                <small>
-                                    10.00
-                                </small>
-                            </button>
+                        <input type="hidden" name="payment_method" value="bkash">
+                        <div class="form-group row mt-3">
+                            <label for="staticEmail" class="col-sm-3 col-form-label"><b>Amount</b></label>
+                            <div class="col-sm-9">
+                                <input type="number" required class="form-control" min="10" name="amount" placeholder="Ex: 10">
+                            </div>
                         </div>
-                        <div class="mt-3 d-grid gap-2 mx-auto">
-                            <button type="button" id="payCancelBtn" class="btn btn-outline-danger">Cancel</button>
-                        </div>
+
+                        <button type="submit" class="btn btn-outline-success btn-lg btn-block">Pay Now</button>
+                        <button type="button" class="btn btn-outline-danger btn-lg btn-block">Cancel</button>
                     </form>
                 </div>
             </div>
         </div>
+        <div class="col-md-3"></div>
     </div>
 </div
 

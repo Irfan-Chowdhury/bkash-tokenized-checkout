@@ -12,7 +12,9 @@ class BkashServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/bkash.php', 'bkash'
+        );
     }
 
     /**

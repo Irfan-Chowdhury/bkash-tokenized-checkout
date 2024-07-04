@@ -8,5 +8,10 @@ Route::get('/bkash', function () {
 });
 
 Route::controller(PaymentController::class)->group(function () {
-    Route::get('checkout', 'checkout')->name('checkout');
+    Route::prefix('payment')->group(function () {
+        Route::get('checkout', 'checkout')->name('checkout');
+        Route::post('/process', 'paymentProcees')->name('payment.process');
+        Route::get('bkash/callback','bkashCallback');
+        Route::get('success', 'paymentSuccess')->name('payment.success');
+    });
 });
