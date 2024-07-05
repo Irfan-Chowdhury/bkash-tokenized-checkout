@@ -36,7 +36,7 @@ class BkashServiceProvider extends ServiceProvider
 
         # publish public/js
         $this->publishes([
-            __DIR__.'/../public/js' => public_path('vendor/bkash/js'),
+            __DIR__.'/../public/assets' => public_path('vendor/bkash'),
         ], 'public');
     }
 }

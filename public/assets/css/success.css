@@ -1,0 +1,48 @@
+.payment {
+    border: 1px solid #f2f2f2;
+    border-radius: 3px;
+    background: #e5e8ec;
+    padding-bottom: 30px;
+    padding-top: 30px;
+}
+
+.payment_header {
+    background: #4caf50; /* Update to your desired theme color */
+    padding: 15px;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto -35px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.check {
+    margin: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background: #fff;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.check i {
+    vertical-align: middle;
+    line-height: 50px;
+    font-size: 30px;
+    color: #4caf50; /* Match the icon color to the theme */
+}
+
+.content {
+    text-align: center;
+    padding-top: 50px;
+}
+
+.content h1 {
+    font-size: 25px;
+    padding-top: 25px;
+}

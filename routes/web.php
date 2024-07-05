@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use IrfanChowdhury\BkashTokenizedCheckout\Http\Controllers\PaymentController;
+use IrfanChowdhury\BkashTokenizedCheckout\Http\Controllers\BkashPaymentController;
 
 
-Route::controller(PaymentController::class)->group(function () {
+Route::controller(BkashPaymentController::class)->group(function () {
     Route::prefix('payment')->group(function () {
         Route::get('checkout', 'checkout')->name('checkout');
         Route::post('/process', 'paymentProcees')->name('payment.process');

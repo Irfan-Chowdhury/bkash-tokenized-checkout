@@ -14,7 +14,6 @@
 
     <link rel="stylesheet" href="{{ asset('vendor/bkash/css/success.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
-    {{-- <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,600;0,700;1,300&display=swap"> --}}
   </head>
   <body class="container mt-2">
 

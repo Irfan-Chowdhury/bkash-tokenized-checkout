@@ -4,10 +4,9 @@ namespace IrfanChowdhury\BkashTokenizedCheckout\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use IrfanChowdhury\BkashTokenizedCheckout\Services\PaymentService;
 
-class PaymentController extends Controller
+class BkashPaymentController extends Controller
 {
     public function checkout()
     {
@@ -37,6 +36,8 @@ class PaymentController extends Controller
             $payment->paymentStatusCheck($request);
 
             session()->put('paymentID', $request->paymentID);
+
+            // Implement your other business logic after payment done.
 
             return redirect()->route('payment.success')->with(['success' => 'Payment Successfully Done']);
         }
