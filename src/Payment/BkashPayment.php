@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace IrfanChowdhury\BkashTokenizedCheckout\Payment;
@@ -22,30 +23,32 @@ class BkashPayment implements PaybleContract
     ];
 
     private $base_url;
-    private $app_key;
-    private $app_secret;
-    private $username;
-    private $password;
-    private $callbackURL;
 
+    private $app_key;
+
+    private $app_secret;
+
+    private $username;
+
+    private $password;
+
+    private $callbackURL;
 
     public function __construct()
     {
-        $this->base_url   = config('bkash.bkash_base_url');
-        $this->app_key    = config('bkash.bkash_app_key');
+        $this->base_url = config('bkash.bkash_base_url');
+        $this->app_key = config('bkash.bkash_app_key');
         $this->app_secret = config('bkash.bkash_app_secret');
-        $this->username   = config('bkash.bkash_username');
-        $this->password   = config('bkash.bkash_password');
-        $this->callbackURL= config('bkash.bkash_callback_url');
+        $this->username = config('bkash.bkash_username');
+        $this->password = config('bkash.bkash_password');
+        $this->callbackURL = config('bkash.bkash_callback_url');
     }
-
 
     public function pay($request)
     {
         $grantTokenData = $this->grantToken();
 
-        if(!isset($grantTokenData['id_token']) && in_array($grantTokenData['statusCode'], $this->errorCodes))
-        {
+        if (! isset($grantTokenData['id_token']) && in_array($grantTokenData['statusCode'], $this->errorCodes)) {
             $statusCode = $grantTokenData['statusCode'];
             $statusMessage = $grantTokenData['statusMessage'];
 
@@ -56,7 +59,7 @@ class BkashPayment implements PaybleContract
 
         $createPaymentObjectData = $this->createPayment($request->amount, $grantTokenData['id_token']);
 
-        if(isset($createPaymentObjectData->statusCode) && in_array($createPaymentObjectData->statusCode, $this->errorCodes)) {
+        if (isset($createPaymentObjectData->statusCode) && in_array($createPaymentObjectData->statusCode, $this->errorCodes)) {
             $statusCode = $createPaymentObjectData->statusCode;
             $statusMessage = $createPaymentObjectData->statusMessage;
 
@@ -66,28 +69,28 @@ class BkashPayment implements PaybleContract
         return redirect()->away($createPaymentObjectData->{'bkashURL'});
     }
 
-    private function grantToken() : array
+    private function grantToken(): array
     {
         $_SESSION['id_token'] = null;
-        $post_token = array(
-            'app_key'=> $this->app_key,
-            'app_secret'=> $this->app_secret
-        );
+        $post_token = [
+            'app_key' => $this->app_key,
+            'app_secret' => $this->app_secret,
+        ];
 
         $url = curl_init("$this->base_url/checkout/token/grant");
 
-        $request_data_json=json_encode($post_token);
-        $header = array(
+        $request_data_json = json_encode($post_token);
+        $header = [
             'Content-Type: application/json',
             "username:$this->username",
-            "password:$this->password"
-        );
+            "password:$this->password",
+        ];
 
-        curl_setopt($url,CURLOPT_HTTPHEADER, $header);
-        curl_setopt($url,CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($url,CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($url,CURLOPT_POSTFIELDS, $request_data_json);
-        curl_setopt($url,CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($url, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($url, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($url, CURLOPT_POSTFIELDS, $request_data_json);
+        curl_setopt($url, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($url, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         $result_data = curl_exec($url);
         curl_close($url);
@@ -100,28 +103,27 @@ class BkashPayment implements PaybleContract
     private function createPayment($totalAmount, string $idToken): object
     {
         $auth = $idToken;
-        $requestbody = array(
+        $requestbody = [
             'mode' => '0011',
             'amount' => $totalAmount,
             'currency' => 'BDT',
             'intent' => 'sale',
             'payerReference' => '01XXXXXXXXX',
             'merchantInvoiceNumber' => rand(),
-            'callbackURL' => $this->callbackURL
-        );
+            'callbackURL' => $this->callbackURL,
+        ];
 
         $url = curl_init("$this->base_url/checkout/create");
         $requestbodyJson = json_encode($requestbody);
 
-        $header = array(
+        $header = [
             'Content-Type: application/json',
-            'Authorization: ' . $auth,
-            "X-APP-Key: $this->app_key"
-        );
-
+            'Authorization: '.$auth,
+            "X-APP-Key: $this->app_key",
+        ];
 
         curl_setopt($url, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($url, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($url, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
         // curl_setopt($url, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($url, CURLOPT_POSTFIELDS, $requestbodyJson);
@@ -135,43 +137,43 @@ class BkashPayment implements PaybleContract
         return $obj;
     }
 
-    public function paymentStatusCheck(Request $request) : bool
+    public function paymentStatusCheck(Request $request): bool
     {
-        if(isset($request->paymentID)){
-            if($request->status==="success") {
+        if (isset($request->paymentID)) {
+            if ($request->status === 'success') {
                 $paymentExecute = $this->excecutePayment($request->paymentID);
-                if(isset($paymentExecute->statusCode) && in_array($paymentExecute->statusCode, $this->errorCodes)) {
+                if (isset($paymentExecute->statusCode) && in_array($paymentExecute->statusCode, $this->errorCodes)) {
                     throw new Exception("$paymentExecute->statusCode |  $paymentExecute->statusMessage");
                 }
-                return true;
-            }
-            else if($request->status==="cancel") {
 
-                throw new Exception("Payment Canceled ! Please try again later.");
+                return true;
+            } elseif ($request->status === 'cancel') {
+
+                throw new Exception('Payment Canceled ! Please try again later.');
             }
         }
-        throw new Exception("Payment failed ! Please try again later.");
+        throw new Exception('Payment failed ! Please try again later.');
     }
 
-    private function excecutePayment(string $paymentID) : object
+    private function excecutePayment(string $paymentID): object
     {
         $auth = json_decode(Session::get('id_token'));
 
-        $post_token = array(
-            'paymentID' => $paymentID
-        );
+        $post_token = [
+            'paymentID' => $paymentID,
+        ];
 
         $url = curl_init("$this->base_url/checkout/execute");
         $posttoken = json_encode($post_token);
 
-        $header = array(
+        $header = [
             'Content-Type:application/json',
-            'Authorization:' . $auth,
-            "X-APP-Key: $this->app_key"
-        );
+            'Authorization:'.$auth,
+            "X-APP-Key: $this->app_key",
+        ];
 
         curl_setopt($url, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($url, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($url, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($url, CURLOPT_POSTFIELDS, $posttoken);
         curl_setopt($url, CURLOPT_FOLLOWLOCATION, 1);
@@ -184,13 +186,4 @@ class BkashPayment implements PaybleContract
 
         return $obj;
     }
-
-
-    public function cancel()
-    {
-
-    }
-
-
 }
-

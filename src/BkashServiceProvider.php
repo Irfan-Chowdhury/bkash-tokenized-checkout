@@ -7,9 +7,6 @@ use Illuminate\Support\ServiceProvider;
 
 class BkashServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         $this->mergeConfigFrom(
@@ -17,9 +14,6 @@ class BkashServiceProvider extends ServiceProvider
         );
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         Route::middleware('web')->group(function () {
@@ -33,8 +27,7 @@ class BkashServiceProvider extends ServiceProvider
             __DIR__.'/../resources/views' => resource_path('views/vendor/bkash'),
         ]);
 
-
-        # publish public/js
+        // publish public/js
         $this->publishes([
             __DIR__.'/../public/assets' => public_path('vendor/bkash'),
         ], 'public');

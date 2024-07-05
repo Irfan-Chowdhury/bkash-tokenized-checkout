@@ -13,7 +13,8 @@
                         </div>
                         <div class="content">
                             <h1>Payment Confirmed!</h1>
-                            <p class="mb-3">Your payment has been confirmed successfully. Payment ID is: <b>{{ session()->get('paymentID') }}</b></p>
+                            <p class="mb-3">Your payment has been confirmed successfully. Payment ID is:
+                                <b>{{ session()->get('paymentID') }}</b></p>
                             <a class="btn btn-primary" href="{{ route('checkout') }}">Go to Home</a>
                         </div>
                     </div>
@@ -22,4 +23,3 @@
         </div>
     </section>
 @endsection
-
