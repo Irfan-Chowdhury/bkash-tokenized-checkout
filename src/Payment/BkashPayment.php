@@ -46,6 +46,10 @@ class BkashPayment implements PaybleContract
 
     public function pay($request)
     {
+        self::isENVCredentialsEmpty();
+        
+        session()->forget('paymentID');
+
         $grantTokenData = $this->grantToken();
 
         if (! isset($grantTokenData['id_token']) && in_array($grantTokenData['statusCode'], $this->errorCodes)) {
@@ -67,6 +71,22 @@ class BkashPayment implements PaybleContract
         }
 
         return redirect()->away($createPaymentObjectData->{'bkashURL'});
+    }
+    
+    private function isENVCredentialsEmpty()
+    {
+        if(empty($this->base_url))
+            throw new Exception('The Bkash Base URL is empty !');
+        else if(empty($this->app_key))
+            throw new Exception('The Bkash App Key is empty !');
+        else if(empty($this->app_secret))
+            throw new Exception('The Bkash App Secret is empty !');
+        else if(empty($this->username))
+            throw new Exception('The Bkash Username is empty !');
+        else if(empty($this->password))
+            throw new Exception('The Bkash Password is empty !');
+        else if(empty(env('APP_URL')))
+            throw new Exception('The App URL is empty !');
     }
 
     private function grantToken(): array

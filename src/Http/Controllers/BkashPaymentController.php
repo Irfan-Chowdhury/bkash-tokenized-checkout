@@ -17,8 +17,6 @@ class BkashPaymentController extends Controller
     public function paymentProcees(PaymentService $paymentService, SubmitRequest $request)
     {
         try {
-            session()->forget('paymentID');
-
             $payment = $paymentService->initialize($request->payment_method);
 
             return $payment->pay($request);

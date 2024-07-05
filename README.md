@@ -30,7 +30,7 @@ After completing the installation, service provider need to register in `config/
 ],
 ```
 
-Now run this command to publish - 
+Now run this publish this - 
 
 ```bash
 php artisan vendor:publish --provider="IrfanChowdhury\BkashTokenizedCheckout\BkashServiceProvider"
@@ -222,6 +222,8 @@ After doing all these, finally you will get the Live Credentials.
 Put the value in .env file -
 
 ```bash
+APP_URL=your_domain.com
+
 # Sandbox Credentials
 APP_URL=your_root_domain
 BKASH_TOKENIZE_SANDBOX=true
