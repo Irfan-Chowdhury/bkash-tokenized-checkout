@@ -5,7 +5,7 @@
 
 <div class="container">
 
-    <h1 class="text-center">Checkout</h1>
+    <h1 class="text-center mt-5">Bkash Checkout</h1>
 
     <div class="row">
         <div class="col-md-3"></div>

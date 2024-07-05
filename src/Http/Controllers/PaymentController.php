@@ -17,6 +17,8 @@ class PaymentController extends Controller
     public function paymentProcees(PaymentService $paymentService, Request $request)
     {
         try {
+            session()->forget('paymentID');
+
             $payment = $paymentService->initialize($request->payment_method);
 
             return $payment->pay($request);
@@ -34,7 +36,9 @@ class PaymentController extends Controller
 
             $payment->paymentStatusCheck($request);
 
-            return redirect()->route('checkout')->with(['success' => 'Payment Successfully Done']);
+            session()->put('paymentID', $request->paymentID);
+
+            return redirect()->route('payment.success')->with(['success' => 'Payment Successfully Done']);
         }
         catch (Exception $e) {
 
