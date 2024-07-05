@@ -8,6 +8,6 @@ return [
     "bkash_app_secret" => env("BKASH_TOKENIZE_APP_SECRET", ""),
     "bkash_username" => env("BKASH_TOKENIZE_USER_NAME", ""),
     "bkash_password"  => env("BKASH_TOKENIZE_PASSWORD", ""),
-    "bkash_callback_url"  => url('payment/bkash/callback'),
+    "bkash_callback_url"  => env('APP_URL').'/payment/bkash/callback',
     'bkash_timezone' => 'Asia/Dhaka',
 ];

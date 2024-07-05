@@ -19,12 +19,7 @@ composer require irfan-chowdhury/bkash-tokenized-checkout
 ```
 
 ## Configuration
-After completing the installation, you can publish with:
-```bash
-php artisan vendor:publish --provider="IrfanChowdhury\BkashTokenizedCheckout\BkashServiceProvider"
-```
-
-Service Provider Registration In `config/app.php`, add in providers array -
+After completing the installation, service provider need to register in `config/app.php`, add in providers array -
 
 ```php
 'providers' => [
@@ -34,6 +29,13 @@ Service Provider Registration In `config/app.php`, add in providers array -
     IrfanChowdhury\BkashTokenizedCheckout\BkashServiceProvider::class,
 ],
 ```
+
+Now run this command to publish - 
+
+```bash
+php artisan vendor:publish --provider="IrfanChowdhury\BkashTokenizedCheckout\BkashServiceProvider"
+```
+
 
 #### Environement Variable (.ENV) 
 ```php
@@ -299,7 +301,7 @@ After published, the `BkashController` file will be copied in `app/Https/Control
     }
 ```
 
-You can override the two methods. The `bkashCallback()` indicates that when the payment done, it'll redirect back this method. This time you customize your other bussiness logic what you want. You'll see a line which is in comment mode. Basically you should customize after this line.
+You can override the two methods. The `bkashCallback()` indicates that when the payment done, it'll redirect back this method. This time you can customize your other bussiness logic what you want. You'll see a line which is in comment mode. Basically you should customize after this line.
 
 ### 2. `routes/web.php`
 
