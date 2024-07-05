@@ -1,10 +1,9 @@
 <?php
 
-namespace IrfanChowdhury\BkashTokenizedCheckout\Http\Controllers;
+namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
-use IrfanChowdhury\BkashTokenizedCheckout\Http\Requests\SubmitRequest;
 use IrfanChowdhury\BkashTokenizedCheckout\Services\PaymentService;
 
 class BkashPaymentController extends Controller
@@ -12,21 +11,6 @@ class BkashPaymentController extends Controller
     public function checkout()
     {
         return view('bkash::checkout');
-    }
-
-    public function paymentProcees(PaymentService $paymentService, SubmitRequest $request)
-    {
-        try {
-            session()->forget('paymentID');
-
-            $payment = $paymentService->initialize($request->payment_method);
-
-            return $payment->pay($request);
-        }
-        catch (Exception $e) {
-
-            return redirect()->back()->withErrors(['errors' => $e->getMessage()]);
-        }
     }
 
     public function bkashCallback(PaymentService $paymentService, Request $request)

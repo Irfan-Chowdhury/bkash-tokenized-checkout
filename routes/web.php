@@ -9,7 +9,6 @@ Route::controller(BkashPaymentController::class)->group(function () {
         Route::get('checkout', 'checkout')->name('checkout');
         Route::post('/process', 'paymentProcees')->name('payment.process');
         Route::get('bkash/callback','bkashCallback');
-        Route::get('success', 'paymentSuccess')->name('payment.success');
 
         Route::get('/success', function () {
             return view('bkash::payment-success');

@@ -3,7 +3,47 @@
 # Bkash Payment Gatway Integration in Laravel
 </div>
 
-Then are some types of bKash Integration. Here we used `Tokenized solution`.
+
+## Requirements
+```php
+"require": {
+    "php": ">= 8.0",
+    "laravel/framework": ">= 9.0"
+},
+```
+
+## Installation
+You can install the package via composer :
+```php
+composer require irfan-chowdhury/bkash-tokenized-checkout
+```
+
+## Configuration
+After completing the installation, you can publish with:
+```bash
+php artisan vendor:publish --provider="IrfanChowdhury\BkashTokenizedCheckout\BkashServiceProvider"
+```
+
+Service Provider Registration In `config/app.php`, add in providers array -
+
+```php
+'providers' => [
+    /*
+    * Package Service Providers...
+    */
+    IrfanChowdhury\BkashTokenizedCheckout\BkashServiceProvider::class,
+],
+```
+
+#### Environement Variable (.ENV) 
+```php
+Please follow the instructions given below -
+```
+
+# Guideline to setup bKash
+
+Then are some types of bKash integration. Here we used `Tokenized solution`.
+
 
 ## Step-1 : Registration
 First of all you need a marchant account and then need to register your website there.
@@ -202,7 +242,10 @@ BKASH_TOKENIZE_PASSWORD=your_sandbox_app_password
 # BKASH_TOKENIZE_PASSWORD=your_live_app_password
 ```
 
-### Try to run in the app
+First of all test your application by Sandbox. If all test ok then comment or hide the sandbox credentials and use the live credentials.
+
+
+### Try to run the package in your app
 
 1. Please type on the url `your-domain.com/payment/checkout`
 
@@ -224,8 +267,79 @@ After Payment done -
 
 <img src="https://snipboard.io/3AFmOR.jpg">
 
+## Override
+
+### 1. BkashController
+After published, the `BkashController` file will be copied in `app/Https/Controllers`. You'll see two method 
+
+```php
+    public function checkout()
+    {
+        return view('bkash::checkout');
+    }
+
+
+    public function bkashCallback(PaymentService $paymentService, Request $request)
+    {
+        try {
+            $payment = $paymentService->initialize('bkash');
+
+            $payment->paymentStatusCheck($request);
+
+            session()->put('paymentID', $request->paymentID);
+
+            // Implement your other business logic after payment done.
+
+            return redirect()->route('payment.success')->with(['success' => 'Payment Successfully Done']);
+        }
+        catch (Exception $e) {
+
+            return redirect()->route('checkout')->withErrors(['errors' => $e->getMessage()]);
+        }
+    }
+```
+
+You can override the two methods. The `bkashCallback()` indicates that when the payment done, it'll redirect back this method. This time you customize your other bussiness logic what you want. You'll see a line which is in comment mode. Basically you should customize after this line.
+
+### 2. `routes/web.php`
+
+When you customize the controller, you need to use the route also. You can use only these line -
+
+```php
+use App\Http\Controllers\BkashPaymentController;
+use Illuminate\Support\Facades\Route;
+
+Route::controller(BkashPaymentController::class)->group(function () {
+    Route::prefix('payment')->group(function () {
+        Route::get('checkout', 'checkout')->name('checkout');
+        Route::get('bkash/callback','bkashCallback');
+    });
+});
+```
+
+If you need to change the `payment/bkash/callback`, you should also update the corresponding data in `config/bkash.php`. However, it is recommended not to make these changes. 
+
+
+### 3. Blade files
+
+You can customize it according to your choice. After publishing, you will find it in the `resources/views/vendor/bkash` directory.
+
+### Demo
+
+- Go to https://merchantdemo.sandbox.bka.sh/frontend/checkout/version/1.2.0-beta
+- Wallet Number: 01770618575
+- OTP: 123456
+- Pin: 12121
+
+Though you'll get Sandox details from Bkash, but you can try by using these in your app.
 
 
 ## References 
 - [Bkash Sandbox API Validation](https://www.youtube.com/watch?v=BbuwRxipIY4)
-- [Tokenized Developer Docs](https://developer.bka.sh/docs/tokenized-checkout-overview)
+- [Bkash Developer Docs](https://developer.bka.sh/docs/tokenized-checkout-overview)
+- Structure follow from - [spatie/package-skeleton-laravel](https://github.com/spatie/package-skeleton-laravel)
+- Coding Style : [Laravel Pint](https://laravel.com/docs/10.x/pint)
+
+
+### <i>Note: This repository is not associated with or promoting bKash and does not provide any guarantees.
+</i>
