@@ -2,6 +2,7 @@
 
 namespace IrfanChowdhury\BkashTokenizedCheckout\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use IrfanChowdhury\BkashTokenizedCheckout\Services\PaymentService;
@@ -15,23 +16,29 @@ class PaymentController extends Controller
 
     public function paymentProcees(PaymentService $paymentService, Request $request)
     {
-        $payment = $paymentService->initialize($request->payment_method);
+        try {
+            $payment = $paymentService->initialize($request->payment_method);
 
-        return $payment->pay($request);
+            return $payment->pay($request);
+        }
+        catch (Exception $e) {
+
+            return redirect()->back()->withErrors(['errors' => $e->getMessage()]);
+        }
     }
 
     public function bkashCallback(PaymentService $paymentService, Request $request)
     {
-        $payment = $paymentService->initialize('bkash');
-        $isPaymentSuccess = $payment->paymentStatusCheck($request);
+        try {
+            $payment = $paymentService->initialize('bkash');
 
-        if(!$isPaymentSuccess){
-            // Display your error message where you want.
-            return redirect(route("checkout"), 307);
+            $payment->paymentStatusCheck($request);
+
+            return redirect()->route('checkout')->with(['success' => 'Payment Successfully Done']);
         }
+        catch (Exception $e) {
 
-        // Write your other logic
-
-        return 'success';
+            return redirect()->route('checkout')->withErrors(['errors' => $e->getMessage()]);
+        }
     }
 }

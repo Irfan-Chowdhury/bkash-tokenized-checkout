@@ -31,12 +31,12 @@ class BkashPayment implements PaybleContract
 
     public function __construct()
     {
-        $this->base_url = config('bkash.bkash_base_url');
-        $this->app_key = config('bkash.bkash_app_key');
+        $this->base_url   = config('bkash.bkash_base_url');
+        $this->app_key    = config('bkash.bkash_app_key');
         $this->app_secret = config('bkash.bkash_app_secret');
-        $this->username = config('bkash.bkash_username');
-        $this->password = config('bkash.bkash_password');
-        $this->callbackURL = config('bkash.bkash_callback_url');
+        $this->username   = config('bkash.bkash_username');
+        $this->password   = config('bkash.bkash_password');
+        $this->callbackURL= config('bkash.bkash_callback_url');
     }
 
 
@@ -48,9 +48,8 @@ class BkashPayment implements PaybleContract
         {
             $statusCode = $grantTokenData['statusCode'];
             $statusMessage = $grantTokenData['statusMessage'];
-            session()->flash('message',"$statusCode | $statusMessage ");
 
-            return redirect(route("checkout"), 307);
+            throw new Exception("$statusCode | $statusMessage");
         }
 
         Session::put('id_token', json_encode($grantTokenData['id_token']));
@@ -60,9 +59,8 @@ class BkashPayment implements PaybleContract
         if(isset($createPaymentObjectData->statusCode) && in_array($createPaymentObjectData->statusCode, $this->errorCodes)) {
             $statusCode = $createPaymentObjectData->statusCode;
             $statusMessage = $createPaymentObjectData->statusMessage;
-            session()->flash('message',"$statusCode | $statusMessage ");
 
-            return redirect(route("checkout"), 307);
+            throw new Exception("$statusCode | $statusMessage");
         }
 
         return redirect()->away($createPaymentObjectData->{'bkashURL'});
@@ -141,20 +139,18 @@ class BkashPayment implements PaybleContract
     {
         if(isset($request->paymentID)){
             if($request->status==="success") {
-                $executePaymentObjectData = $this->excecutePayment($request->paymentID);
-                if(isset($executePaymentObjectData->statusCode) && in_array($executePaymentObjectData->statusCode, $this->errorCodes)) {
-                    $statusCode = $executePaymentObjectData->statusCode;
-                    $statusMessage = $executePaymentObjectData->statusMessage;
-                    session()->flash('message',"$statusCode | $statusMessage ");
-
-                    return false;
+                $paymentExecute = $this->excecutePayment($request->paymentID);
+                if(isset($paymentExecute->statusCode) && in_array($paymentExecute->statusCode, $this->errorCodes)) {
+                    throw new Exception("$paymentExecute->statusCode |  $paymentExecute->statusMessage");
                 }
                 return true;
             }
-        }
-        session()->flash('message','Payment failed ! Please try again later.');
+            else if($request->status==="cancel") {
 
-        return false;
+                throw new Exception("Payment Canceled ! Please try again later.");
+            }
+        }
+        throw new Exception("Payment failed ! Please try again later.");
     }
 
     private function excecutePayment(string $paymentID) : object

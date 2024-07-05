@@ -3,16 +3,9 @@
 
 @section('content')
 
-<h1 class="text-center">Checkout</h1>
-
-
-
-
 <div class="container">
 
-
-    @include('bkash::session-message')
-
+    <h1 class="text-center">Checkout</h1>
 
     <div class="row">
         <div class="col-md-3"></div>
@@ -41,7 +34,6 @@
         </div>
         <div class="col-md-3"></div>
     </div>
-</div
+</div>
 
 @endsection
-

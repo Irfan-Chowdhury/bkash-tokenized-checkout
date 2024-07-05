@@ -28,5 +28,15 @@ class BkashServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'bkash');
 
+        $this->publishes([
+            __DIR__.'/../config/bkash.php' => config_path('bkash.php'),
+            __DIR__.'/../resources/views' => resource_path('views/vendor/bkash'),
+        ]);
+
+
+        # publish public/js
+        $this->publishes([
+            __DIR__.'/../public/js' => public_path('vendor/bkash/js'),
+        ], 'public');
     }
 }
