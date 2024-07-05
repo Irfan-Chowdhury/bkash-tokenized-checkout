@@ -27,7 +27,6 @@
                         </div>
 
                         <button type="submit" class="btn btn-outline-success btn-lg btn-block">Pay Now</button>
-                        <button type="button" class="btn btn-outline-danger btn-lg btn-block">Cancel</button>
                     </form>
                 </div>
             </div>
