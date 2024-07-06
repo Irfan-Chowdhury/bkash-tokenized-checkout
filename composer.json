@@ -1,6 +1,6 @@
 {
     "name": "irfan-chowdhury/bkash-tokenized-checkout",
-    "description": "This is bkash tokenized checkout with laravel",
+    "description": "This is a bkash tokenized payment gateway solution with laravel. Integrate with the payment solution that fits all business needs and Enrich the customers' online payment experience.",
     "type": "library",
     "license": "MIT",
     "autoload": {
